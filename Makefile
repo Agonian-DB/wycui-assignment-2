@@ -1,9 +1,20 @@
-# Makefile
+ifeq ($(OS),Windows_NT)
+    # Windows specific settings
+    FLASK_RUN=flask run --host=0.0.0.0 --port=3000
+    SET_ENV=set FLASK_APP=app.py
+    PYTHON=python
+else
+    # Linux/Unix/MacOS settings
+    FLASK_RUN=FLASK_APP=app.py flask run --host=0.0.0.0 --port=3000
+    SET_ENV=export FLASK_APP=app.py
+    PYTHON=python3
+endif
 
-# Installs the required dependencies using pip
+# Install the dependencies
 install:
-	pip install -r requirements.txt
+	$(PYTHON) -m pip install --upgrade pip
+	$(PYTHON) -m pip install -r requirements.txt
 
-# Runs the web application locally on http://localhost:3000
+# Run the Flask application
 run:
-	FLASK_APP=app.py flask run --host=0.0.0.0 --port=3000
+	$(SET_ENV) && $(FLASK_RUN)
